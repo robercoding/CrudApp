@@ -10,10 +10,10 @@ interface SubscriberDAO {
     suspend fun insertSubscriber(subscriber: Subscriber): Long
 
     @Update
-    suspend fun updateSubscriber(subscriber: Subscriber): Long
+    suspend fun updateSubscriber(subscriber: Subscriber)
 
     @Delete
-    suspend fun deleteSubscriber(subscriber: Subscriber): Long
+    suspend fun deleteSubscriber(subscriber: Subscriber)
 
     @Query("DELETE FROM subscriber_data_table")
     suspend fun deleteAll()

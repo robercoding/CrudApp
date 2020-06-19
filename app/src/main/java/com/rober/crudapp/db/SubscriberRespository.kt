@@ -2,7 +2,7 @@ package com.rober.crudapp.db
 
 class SubscriberRespository(private val subscriberDAO: SubscriberDAO) {
 
-    fun getAllSubscribers() = subscriberDAO.getAllSubscribers()
+    val  subscribers = subscriberDAO.getAllSubscribers()
 
     suspend fun insert(subscriber: Subscriber){
         subscriberDAO.insertSubscriber(subscriber)
