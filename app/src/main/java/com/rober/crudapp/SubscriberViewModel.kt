@@ -2,6 +2,7 @@ package com.rober.crudapp
 
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,11 @@ class SubscriberViewModel(private val repository: SubscriberRespository) : ViewM
     val subscribers = repository.subscribers
     private var isUpdateOrDelete = false
     private lateinit var subscriberToUpdateOrDelete: Subscriber
+
+    private val statusMessage = MutableLiveData<Event<String>>()
+    val message : LiveData<Event<String>>
+            get() = statusMessage
+
 
     @Bindable
     val inputName = MutableLiveData<String>()
@@ -64,6 +70,7 @@ class SubscriberViewModel(private val repository: SubscriberRespository) : ViewM
 
     fun insertSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
             repository.insert(subscriber)
+            statusMessage.value = Event("Subscriber has been inserted")
         }
 
     fun updateSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
@@ -73,6 +80,7 @@ class SubscriberViewModel(private val repository: SubscriberRespository) : ViewM
         isUpdateOrDelete = false
         saveOrUpdateButton.value = "Save"
         clearOrDeleteButton.value = "Clear All"
+        statusMessage.value = Event("Subscriber has been updated sucessfully")
         }
 
     fun deleteSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
@@ -82,10 +90,12 @@ class SubscriberViewModel(private val repository: SubscriberRespository) : ViewM
         isUpdateOrDelete = false
         saveOrUpdateButton.value = "Save"
         clearOrDeleteButton.value = "Clear All"
+        statusMessage.value = Event("Subscriber has been deleted succesfully")
     }
 
     fun clearAll(): Job = viewModelScope.launch {
         repository.deleteAll()
+        statusMessage.value = Event("All subscribers has been deleted succesfully")
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
