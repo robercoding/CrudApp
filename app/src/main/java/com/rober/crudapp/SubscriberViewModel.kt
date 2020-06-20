@@ -69,33 +69,49 @@ class SubscriberViewModel(private val repository: SubscriberRespository) : ViewM
     }
 
     fun insertSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
-            repository.insert(subscriber)
-            statusMessage.value = Event("Subscriber has been inserted")
+            val newRowId = repository.insert(subscriber)
+            if(newRowId > -1){
+                statusMessage.value = Event("Subscriber has been inserted")
+            }else{
+                statusMessage.value = Event("Error ocurred")
+            }
         }
 
     fun updateSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
-        repository.update(subscriber)
+        val rowId = repository.update(subscriber)
+        if(rowId > 0 ){
+            statusMessage.value = Event("Subscriber has updated")
+        }else{
+            statusMessage.value = Event("Error ocurred")
+        }
         inputName.value = null
         inputEmail.value = null
         isUpdateOrDelete = false
         saveOrUpdateButton.value = "Save"
         clearOrDeleteButton.value = "Clear All"
-        statusMessage.value = Event("Subscriber has been updated sucessfully")
-        }
+    }
 
     fun deleteSubscriber(subscriber: Subscriber): Job = viewModelScope.launch {
-        repository.delete(subscriber)
+        val noOfRowDeleted = repository.delete(subscriber)
+        if(noOfRowDeleted > 0 ){
+            statusMessage.value = Event("$noOfRowDeleted subscriber row has been deleted succesfully")
+        }else{
+            statusMessage.value = Event("Error ocurred")
+        }
         inputName.value = null
         inputEmail.value = null
         isUpdateOrDelete = false
         saveOrUpdateButton.value = "Save"
         clearOrDeleteButton.value = "Clear All"
-        statusMessage.value = Event("Subscriber has been deleted succesfully")
     }
 
     fun clearAll(): Job = viewModelScope.launch {
-        repository.deleteAll()
-        statusMessage.value = Event("All subscribers has been deleted succesfully")
+        val noOfRowsDeleted = repository.deleteAll()
+        if(noOfRowsDeleted > 0 ){
+            statusMessage.value = Event("$noOfRowsDeleted subscribers rows has been deleted succesfully")
+        }else{
+            statusMessage.value = Event("Error ocurred")
+        }
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
