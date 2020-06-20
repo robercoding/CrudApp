@@ -10,8 +10,9 @@ import com.rober.crudapp.R
 import com.rober.crudapp.databinding.ListItemBinding
 import com.rober.crudapp.db.Subscriber
 
-class SubscriberAdapter(private val subscribersList: List<Subscriber>, private val clickListener: (Subscriber)->Unit) : RecyclerView.Adapter<SubscriberViewHolder>() {
+class SubscriberAdapter(private val clickListener: (Subscriber)->Unit) : RecyclerView.Adapter<SubscriberViewHolder>() {
 
+    private val subscribersList = ArrayList<Subscriber>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubscriberViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -27,6 +28,10 @@ class SubscriberAdapter(private val subscribersList: List<Subscriber>, private v
         holder.bind(subscribersList[position], clickListener)
     }
 
+    fun setList(subscriberList: List<Subscriber>){
+        subscribersList.clear()
+        subscribersList.addAll(subscriberList)
+    }
 
 }
 
